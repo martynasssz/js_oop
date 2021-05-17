@@ -18,6 +18,12 @@ class ProductItem {
     this.product = product;
   }
 
+  addToCart(){
+    console.log('Adding product to cart...');
+    console.log(this.product);
+
+  }
+
   //logic of rending single product in product item
   render() {
     const prodEl = document.createElement('li');
@@ -33,6 +39,9 @@ class ProductItem {
         </div>
       </div>
     `;
+    const addCartButton = prodEl.querySelector('button');
+    addCartButton.addEventListener('click', this.addToCart.bind(this));
+
     return prodEl;
   }
 }
