@@ -16,10 +16,22 @@ class Product {
 class ShoppingCart {
   items = [];
 
-  addProduct(product) {
-    this.items.push(product);   
-    this.totalOutput.innerHTML = `<h2> Total: \$${1} </h2>`; 
+  set cartItems(value) {
+    this.items = value; //overwrite existing array with new one
+    this.totalOutput.innerHTML = `<h2> Total: \$${this.totalAmount.toFixed(2)} </h2>`;
   }
+
+  get totalAmount() {
+    const sum = this.items.reduce((prevValue, curItem) => prevValue + curItem.price, 0);
+    return sum;
+  }
+
+  addProduct(product) {
+    const updatedItems = [...this.items];   
+    console.log(updatedItems);
+    updatedItems.push(product);
+    this.cartItems = updatedItems;
+  }   
 
   render() {
     const cartEl =document.createElement('section');
