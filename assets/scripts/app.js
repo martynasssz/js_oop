@@ -13,7 +13,34 @@ class Product {
   }
 }
 
-class ShoppingCart {
+class ElementAttribute {
+  constructor(attrName, attrValue) {
+    this.name = attrName;
+    this.value = attrValue;
+  }
+}
+
+class Component {
+  constructor(renderHookId) {
+    this.hookId = renderHookId;
+  }
+
+  createRootElement(tag, cssClasses, attributes) {
+    const rootElement = document.createElement(tag);
+    if (cssClasses) {
+      rootElement.className = cssClasses;
+    }
+    if(attributes && attributes.length > 0) { // attributes.length - array length
+      for (const attr of attributes) {
+        rootElement.setAttribute(attr.name, attr.value);
+      }
+    }
+    document.getElementById(this.hookId).append(rootElement);
+    return rootElement;
+  }  
+}
+//inheritence only from one class
+class ShoppingCart extends Component {
   items = [];
 
   set cartItems(value) {
@@ -26,23 +53,25 @@ class ShoppingCart {
     return sum;
   }
 
+  constructor(renderHookId) {
+    super(renderHookId);
+  }
+
   addProduct(product) {
-    const updatedItems = [...this.items];   
-    console.log(updatedItems);
+    const updatedItems = [...this.items];       
     updatedItems.push(product);
     this.cartItems = updatedItems;
   }   
 
   render() {
-    const cartEl =document.createElement('section');
-
+    //const cartEl =document.createElement('section');
+    const cartEl = this.createRootElement('section', 'cart');
     cartEl.innerHTML = `
       <h2> Total": \$${0} </h2>
       <button> Order Now!</button>
     `;
-    cartEl.className = 'cart';
-    this.totalOutput = cartEl.querySelector('h2'); //totalOutput new property created
-    return cartEl;
+    //cartEl.className = 'cart';
+    this.totalOutput = cartEl.querySelector('h2'); //totalOutput new property created    
   }
 }
 
@@ -113,12 +142,11 @@ class Shop {
   render() {
     const renderHook = document.getElementById('app'); //render in app (which is inside divs)
 
-    this.cart = new ShoppingCart(); //saving into property
-    const cartEl = this.cart.render();
+    this.cart = new ShoppingCart('app'); //saving into property
+    this.cart.render();
     const productList = new ProductList();
     const prodListEl = productList.render();
-
-    renderHook.append(cartEl);//append some content
+    
     renderHook.append(prodListEl);//append some content
   }
 }
