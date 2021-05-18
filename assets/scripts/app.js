@@ -59,14 +59,21 @@ class ShoppingCart extends Component {
   }
 
   constructor(renderHookId) {
-    super(renderHookId);
+    super(renderHookId, false);
+    this.orderProducts = () => {
+      console.log('Ordering...');
+      console.log(this.items);
+    }
+    this.render();
   }
 
-  addProduct(product) {
+  addProduct(product) { 
     const updatedItems = [...this.items];       
     updatedItems.push(product);
     this.cartItems = updatedItems;
-  }   
+  } 
+  
+  
 
   render() {
     //const cartEl =document.createElement('section');
@@ -75,7 +82,9 @@ class ShoppingCart extends Component {
       <h2> Total": \$${0} </h2>
       <button> Order Now!</button>
     `;
-    //cartEl.className = 'cart';
+    const orderButton = cartEl.querySelector('button');
+    // orderButton.addEventListener('click', () => this.orderProducts()); //the same as bind()
+    orderButton.addEventListener('click', this.orderProducts); //the same as bind()
     this.totalOutput = cartEl.querySelector('h2'); //totalOutput new property created    
   }
 }
